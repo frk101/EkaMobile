@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   logo: {
-    width: 120,
-    height: 150,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
   },
   indicator: {

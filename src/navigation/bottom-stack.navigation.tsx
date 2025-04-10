@@ -3,15 +3,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomStackParamList} from './types';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Colors, Enums, Images} from '../constants';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Colors, Images} from '../constants';
 import Screens from '../screens';
 import {DrawerToggleButton} from '@react-navigation/drawer';
 import {useState} from 'react';
@@ -76,7 +69,7 @@ const BottomTabNavigator: React.FC = () => {
           headerLeft: () => <HeaderLeft />,
           headerRight: () => <DrawerToggleButton tintColor={Colors.BLACK} />,
         })}>
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Intranet"
           component={Screens.BottomScreens.IntranetScreen}
           options={{
@@ -87,7 +80,7 @@ const BottomTabNavigator: React.FC = () => {
               <TabIcon focused={focused} image={Images.USER} />
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="PhoneDirectory"
           component={Screens.BottomScreens.PhoneDirectoryScreen}
@@ -104,15 +97,14 @@ const BottomTabNavigator: React.FC = () => {
           name="Home"
           component={Screens.BottomScreens.HomeScreen}
           options={{
-            tabBarLabel: () => null,
-            tabBarIcon: ({focused}) => (
-              <TabIcon
-                focused={focused}
-                image={Images.HOME}
-                tintColor={Colors.WHITE}
-              />
+            tabBarLabel: ({focused}) => (
+              <TabText label="Ana Sayfa" focused={focused} />
             ),
-            tabBarButton: props => <CustomTabBarButton {...props} />,
+            tabBarIcon: ({focused}) => (
+              <TabIcon focused={focused} image={Images.HOME} />
+            ),
+
+            // tabBarButton: props => <CustomTabBarButton {...props} />,
           }}
         />
         <Tab.Screen
@@ -173,13 +165,6 @@ const BottomTabNavigator: React.FC = () => {
     </View>
   );
 };
-const CustomTabBarButton: React.FC<any> = ({children, onPress}) => (
-  <View style={styles.shadowContainer}>
-    <TouchableOpacity style={styles.customButtonContainer} onPress={onPress}>
-      {children}
-    </TouchableOpacity>
-  </View>
-);
 
 export default BottomTabNavigator;
 

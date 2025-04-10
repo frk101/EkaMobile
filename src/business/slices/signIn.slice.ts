@@ -42,7 +42,17 @@ export const {fetchStart, fetchSuccessSignIn, fetchFailure, fetchResetLogin} =
   memberSlice.actions;
 
 export const fetchSignIn =
-  ({email, password}: {email: any; password: any}): AppThunk =>
+  ({
+    email,
+    password,
+    deviceId,
+    deviceType,
+  }: {
+    email: any;
+    password: any;
+    deviceId: any;
+    deviceType: any;
+  }): AppThunk =>
   async (dispatch, getState) => {
     const url = `${Enums.BASE_URL}api/member/signin`;
     const token = getState().getTokenSlice.token;
@@ -58,11 +68,19 @@ export const fetchSignIn =
         },
       );
       if (response.data.isSuccess) {
-        toast.success(response.data.message);
-        navigationUtil.navigate('AuthStack', {
-          screen: 'Verification',
-          params: {email: email, password: password},
-        });
+        dispatch(
+          fetchDeviceSave({
+            deviceId: deviceId,
+            deviceType: deviceType,
+            memberId: response?.data?.member?.id,
+            member: response?.data?.member,
+          }),
+        );
+        // toast.success(response.data.message);
+        // navigationUtil.navigate('AuthStack', {
+        //   screen: 'Verification',
+        //   params: {email: email, password: password},
+        // });
       } else {
         toast.error(response.data.message);
       }

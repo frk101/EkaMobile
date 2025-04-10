@@ -68,7 +68,6 @@ export const fetcMessageList =
     const url = `${Enums.BASE_URL}api/AssistantChatApi/GetPreviousMessages`;
 
     const token = getState().getTokenSlice.token;
-    console.log(token);
     dispatch(fetchStart());
 
     try {

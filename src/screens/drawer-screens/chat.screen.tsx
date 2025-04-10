@@ -35,12 +35,12 @@ const ChatScreen: React.FC = () => {
   const {messageList, messageListLoading, sendMessage} = useSelector(
     (state: RootState) => state.aiSlice,
   );
-  console.log(member?.id);
 
   useEffect(() => {
     if (isFocused) {
       handleMessageList();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {

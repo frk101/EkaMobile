@@ -9,8 +9,9 @@ import BottomTabNavigator from './bottom-stack.navigation';
 import {Colors, Images} from '../constants';
 import CustomDrawerContent from '../components/custom-drawer-content';
 import screens from '../screens';
-import {Image, Text, TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity} from 'react-native';
 import AnnouncementsDetailScreen from '../screens/drawer-screens/announcements-detail.screen';
+import HelpDeskSistemi from '../screens/drawer-screens/help-desk-sistemi';
 
 const Drawer = createDrawerNavigator();
 
@@ -247,7 +248,7 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
           headerShown: true,
           headerTitle: () => (
             <Image
-              source={require('../../assets/images/bizzmeslogo.png')}
+              source={require('../../assets/images/footer-logo.png')}
               style={{width: 70, height: 50, resizeMode: 'contain'}}
             />
           ),
@@ -275,17 +276,17 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
         })}
       />
       <Drawer.Screen
-        name="HairdresserAppointment"
-        component={screens.DrawerScreens.HairdresserAppointmentScreen}
+        name="HelpDeskSistemi"
+        component={HelpDeskSistemi}
         options={({route}) => ({
           //route?.params?.new?.title
           headerShown: true,
-          headerTitle: 'Kuaför Randevu Sistemi',
+          headerTitle: () => null,
           headerTitleAlign: 'center',
           headerLeft: () => (
             <HeaderLeft onPress={() => navigation.navigate('BottomStack')} />
           ),
-          headerRight: () => <DrawerToggleButton tintColor={Colors.BLACK} />,
+          headerRight: () => null,
           headerTintColor: Colors.BLACK,
         })}
       />

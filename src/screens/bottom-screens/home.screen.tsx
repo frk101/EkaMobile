@@ -33,12 +33,8 @@ import {fetcgetYearRepeatList} from '../../business/slices/get-year-repeat-list'
 import {fetchUnitLocationList} from '../../business/slices/location.slice';
 import {fetchPopUpData} from '../../business/slices/popup.slice';
 import PopupModal from '../../modals/pop-up.modal';
-const REFECTORY_URLS = [
-  'https://bizz.emlakkonut.com.tr/images/kamera/snap_c1.jpg',
-  'https://bizz.emlakkonut.com.tr/images/kamera/2/snap_c1.jpg',
-];
+
 const HomeScreen: React.FC = () => {
-  const [data, setData] = useState<any[]>([]);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -92,22 +88,7 @@ const HomeScreen: React.FC = () => {
   const toggleExpanded = () => {
     setIsCollapsed(!isCollapsed);
   };
-  useEffect(() => {
-    // Refactory verilerini güncelleyen bir fonksiyon
-    const fetchRefectoryData = () => {
-      const updatedData = REFECTORY_URLS.map((url, index) => ({
-        id: index + 1,
-        image: `${url}?v=${new Date().toISOString().replace(/[:.]/g, '-')}`,
-      }));
-      setData(updatedData);
-    };
 
-    // Bileşen yüklendiğinde veya bir süre sonra tekrar güncelleme
-    fetchRefectoryData();
-    const interval = setInterval(fetchRefectoryData, 6000); // her 1 dakikada bir yenileme
-
-    return () => clearInterval(interval); // Bileşen kaldırıldığında interval temizlenir
-  }, []);
   const formatDateAccc = (dateString: string): string => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -156,11 +137,11 @@ const HomeScreen: React.FC = () => {
           toggleExpanded={toggleExpanded}
           favoriteApps={favoriteApps}
         />
-        <HorizontalCardComponent
+        {/* <HorizontalCardComponent
           data={data}
           type={Enums.HORIZONTAL_CARD.REFECTORY}
           title="Yemekhane Görüntü"
-        />
+        /> */}
         <FoodMenuCardComponent
           data={todayMenu}
           onPress={() => {

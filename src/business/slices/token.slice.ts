@@ -46,8 +46,8 @@ export const fetchToken = (): AppThunk => async (dispatch, getState) => {
 
   try {
     const response = await axios.post(url, {
-      username: 'super',
-      password: 'Y3KKwe7jGMD',
+      username: 'ekadmin',
+      password: 'Eka123456',
     });
 
     if (response.data.isSuccess) {

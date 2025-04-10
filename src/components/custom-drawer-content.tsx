@@ -61,12 +61,12 @@ const CustomDrawerContent = props => {
         })}
         <TouchableOpacity
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('HairdresserAppointment')}>
+          onPress={() => props.navigation.navigate('HelpDeskSistemi')}>
           <Image
             style={styles.userIcon}
-            source={require('../../assets/icons/scissors.png')}
+            source={require('../../assets/icons/customer-support.png')}
           />
-          <Text style={styles.drawerText}>Kuaför Randevu Sistemi</Text>
+          <Text style={styles.drawerText}>Destek Sistemi</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.drawerItem}

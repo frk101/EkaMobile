@@ -1,23 +1,25 @@
-import { Animated, ImageBackground, ScrollView, StyleSheet } from 'react-native';
+import {Animated, ImageBackground, ScrollView, StyleSheet} from 'react-native';
 import React from 'react';
-import { Images } from '../../../constants';
-import { useKeyboardAnimation } from '../../../hooks';
+import {Images} from '../../../constants';
+import {useKeyboardAnimation} from '../../../hooks';
 
 interface Layout {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 const LayoutWidgets: React.FC<Layout> = ({children}) => {
-    const imageSize = useKeyboardAnimation(125, 50);
+  const imageSize = useKeyboardAnimation(200, 100);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}  >
-    <ImageBackground source={Images.AUTH_BACKGROUND} style={styles.imageContainer} >
-    <Animated.Image
-        source={Images.LOGIN_LOGO}
-        style={[styles.image, {width: imageSize, height: imageSize}]}
-      />
-      {children}
-    </ImageBackground>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ImageBackground
+        source={Images.AUTH_BACKGROUND}
+        style={styles.imageContainer}>
+        <Animated.Image
+          source={Images.LOGIN_LOGO}
+          style={[styles.image, {width: imageSize, height: imageSize}]}
+        />
+        {children}
+      </ImageBackground>
     </ScrollView>
   );
 };
@@ -25,23 +27,25 @@ const LayoutWidgets: React.FC<Layout> = ({children}) => {
 export default LayoutWidgets;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-      },
-      imageContainer: {
-        width: '100%',
-        height: '100%',
-        alignItems:'center',
-        // justifyContent:'center',
-        resizeMode: 'cover',
-      },
-      content:{
-      flexGrow: 1,alignItems:'center',justifyContent:'center',
-      },
-      image: {
-        resizeMode: 'contain',
-        alignSelf: 'center',
-        marginTop: '30%',
-        marginBottom:60,
-      },
+  container: {
+    flex: 1,
+  },
+  imageContainer: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    // justifyContent:'center',
+    resizeMode: 'cover',
+  },
+  content: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: '30%',
+    marginBottom: 60,
+  },
 });

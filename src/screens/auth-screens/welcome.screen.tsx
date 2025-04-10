@@ -5,7 +5,9 @@ import WebView from 'react-native-webview';
 const CustomerWeb = () => {
   return (
     <WebView
-      source={{uri: 'https://bizz.emlakkonut.com.tr/tr-TR/Account/Register'}}
+      source={{
+        uri: 'https://bizz.emlakkonutasansor.com/tr-TR/Account/Register',
+      }}
       style={{flex: 1}}
     />
   );

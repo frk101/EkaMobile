@@ -6,9 +6,9 @@ export default {
     REPEAT: 'repeat',
   },
   BASE_URL: __DEV__
-    ? 'https://bizz.emlakkonut.com.tr/'
-    : 'https://bizz.emlakkonut.com.tr/',
-  DIGITAL_CARD_URL: 'https://bizz.emlakkonut.com.tr/digital/card/',
+    ? 'https://bizz.emlakkonutasansor.com/'
+    : 'https://bizz.emlakkonutasansor.com/',
+  DIGITAL_CARD_URL: 'https://bizz.emlakkonutasansor.com/digital/card/',
   LOCATION_ACTIVITY: {
     LOGIN: 'ActivityLoggedSuccessfully',
     LOGOUT: 'ActivityLoggedOutSuccessfully',
