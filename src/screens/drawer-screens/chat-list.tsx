@@ -95,19 +95,23 @@ const ChatList = ({navigation}) => {
   const renderItem = useCallback(
     ({item}: {item: Thread}) => (
       <TouchableOpacity
-        style={styles.threadItem}
+        style={styles.chatCard}
         onPress={() => {
           navigation.navigate('ChatMessage', {id: item.chatId});
         }}>
-        <Text style={styles.threadText}>
-          {formatDateThread(item.createdDate)}
-        </Text>
-        <TouchableOpacity onPress={() => confirmDelete(item.chatId)}>
-          <Image source={Images.TRASH} style={styles.userIcon} />
+        <View style={styles.chatContent}>
+          <Text style={styles.chatTitle}>Sohbet #{item.chatId}</Text>
+          <Text style={styles.chatDate}>
+            {formatDateThread(item.createdDate)}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.trashButton}
+          onPress={() => confirmDelete(item.chatId)}>
+          <Image source={Images.TRASH} style={styles.trashIcon} />
         </TouchableOpacity>
       </TouchableOpacity>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -196,16 +200,20 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   fab: {
-    width: 70,
-    height: 70,
-    backgroundColor: '#0084b4',
-    borderRadius: 35,
+    width: 60,
+    height: 60,
+    backgroundColor: '#0E3192',
+    borderRadius: 30,
     position: 'absolute',
-    bottom: 50,
+    bottom: 30,
     right: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
   },
   fabIcon: {
     width: 30,
@@ -218,5 +226,44 @@ const styles = StyleSheet.create({
     marginTop: 40,
     color: '#999',
     fontSize: 16,
+  },
+  chatCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f1f9ff',
+    marginHorizontal: 16,
+    marginVertical: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    position: 'relative',
+  },
+  chatContent: {
+    flex: 1,
+  },
+  chatTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E3192',
+  },
+  chatDate: {
+    fontSize: 13,
+    color: '#777',
+    marginTop: 4,
+  },
+  trashButton: {
+    marginLeft: 12,
+    padding: 8,
+  },
+  trashIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#e53935',
+    resizeMode: 'contain',
   },
 });

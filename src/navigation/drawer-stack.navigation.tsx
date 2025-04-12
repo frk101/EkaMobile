@@ -12,6 +12,7 @@ import screens from '../screens';
 import {Image, TouchableOpacity} from 'react-native';
 import AnnouncementsDetailScreen from '../screens/drawer-screens/announcements-detail.screen';
 import HelpDeskSistemi from '../screens/drawer-screens/help-desk-sistemi';
+import HelpDestekChat from '../screens/drawer-screens/help-destek-chat';
 
 const Drawer = createDrawerNavigator();
 
@@ -254,7 +255,7 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
           ),
           headerTitleAlign: 'center',
           headerLeft: () => (
-            <HeaderLeft onPress={() => navigation.navigate('BottomStack')} />
+            <HeaderLeft onPress={() => navigation.navigate('ChatList')} />
           ),
           headerRight: () => null,
           headerTintColor: Colors.BLACK,
@@ -297,13 +298,29 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
       <Drawer.Screen
         name="HelpDeskSistemi"
         component={HelpDeskSistemi}
-        options={({route}) => ({
+        options={() => ({
           //route?.params?.new?.title
           headerShown: true,
-          headerTitle: () => null,
+          headerTitle: 'Yardım Destek Sistemi',
           headerTitleAlign: 'center',
           headerLeft: () => (
             <HeaderLeft onPress={() => navigation.navigate('BottomStack')} />
+          ),
+          headerRight: () => null,
+          headerTintColor: Colors.BLACK,
+        })}
+      />
+      <Drawer.Screen
+        name="HelpDestekChat"
+        component={HelpDestekChat}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitle: 'Destek Talebi Oluştur',
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <HeaderLeft
+              onPress={() => navigation.navigate('HelpDeskSistemi')}
+            />
           ),
           headerRight: () => null,
           headerTintColor: Colors.BLACK,
