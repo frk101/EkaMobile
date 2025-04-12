@@ -261,6 +261,25 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
         })}
       />
       <Drawer.Screen
+        name="ChatList"
+        component={screens.DrawerScreens.ChatList}
+        options={() => ({
+          headerShown: true,
+          headerTitle: () => (
+            <Image
+              source={require('../../assets/images/footer-logo.png')}
+              style={{width: 70, height: 50, resizeMode: 'contain'}}
+            />
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <HeaderLeft onPress={() => navigation.navigate('BottomStack')} />
+          ),
+          headerRight: () => null,
+          headerTintColor: Colors.BLACK,
+        })}
+      />
+      <Drawer.Screen
         name="SliderDetail"
         component={screens.BottomScreens.SliderDetail}
         options={({route}) => ({

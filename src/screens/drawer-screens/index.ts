@@ -18,6 +18,7 @@ import DigitalBusinessCard from './digital-business-card';
 import Advertisements from './advertisements';
 import AdvertisementsDetail from './advertisements-detail';
 import HairdresserAppointmentScreen from './hairdresser-appointment';
+import ChatList from './chat-list';
 export default {
   AnnouncementsScreen,
   CorporateAgreementsScreen,
@@ -39,4 +40,5 @@ export default {
   Advertisements,
   AdvertisementsDetail,
   HairdresserAppointmentScreen,
+  ChatList,
 };

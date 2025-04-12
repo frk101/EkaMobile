@@ -37,6 +37,7 @@ import PopupModal from '../../modals/pop-up.modal';
 const HomeScreen: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const {member} = useSelector((state: RootState) => state.memberSlice);
 
   const {motto, mottoLoading} = useSelector(
     (state: RootState) => state.mottoSlice,
@@ -113,7 +114,7 @@ const HomeScreen: React.FC = () => {
       </View>
     );
   }
-  // console.log(news);
+  console.log(todayMenu);
   return (
     <View style={styles.container}>
       <HeaderUserComponent />
@@ -137,17 +138,16 @@ const HomeScreen: React.FC = () => {
           toggleExpanded={toggleExpanded}
           favoriteApps={favoriteApps}
         />
-        {/* <HorizontalCardComponent
-          data={data}
-          type={Enums.HORIZONTAL_CARD.REFECTORY}
-          title="Yemekhane Görüntü"
-        /> */}
-        <FoodMenuCardComponent
-          data={todayMenu}
-          onPress={() => {
-            navigationUtil.navigate('DrawerStack', {screen: 'Menu'});
-          }}
-        />
+
+        {todayMenu?.length > 0 && !todayMenuLoading && (
+          <FoodMenuCardComponent
+            data={todayMenu}
+            onPress={() => {
+              navigationUtil.navigate('DrawerStack', {screen: 'Menu'});
+            }}
+          />
+        )}
+
         {Array.isArray(birthdayUsers) &&
           birthdayUsers.length > 0 &&
           !birthdayUsersLoading && (

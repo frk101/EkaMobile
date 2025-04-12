@@ -116,7 +116,7 @@ const BottomTabNavigator: React.FC = () => {
               e.preventDefault();
               // setStatusModal(true);
               navigationUtil.navigate('DrawerStack', {
-                screen: 'ChatMessage',
+                screen: 'ChatList',
               });
               // dispatch(ModalActions.showValeActions());
             },

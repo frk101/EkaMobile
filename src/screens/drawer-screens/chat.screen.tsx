@@ -1,184 +1,262 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   ActivityIndicator,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Text,
+  SafeAreaView,
+  Alert,
 } from 'react-native';
-import {GiftedChat, IMessage, Bubble} from 'react-native-gifted-chat';
+import {GiftedChat, IMessage, Bubble, Composer} from 'react-native-gifted-chat';
+import {useIsFocused, useRoute} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 import Markdown from 'react-native-markdown-display';
-import {AppDispatch, RootState} from '../../business/store';
-import {useDispatch, useSelector} from 'react-redux';
-import {Colors} from '../../constants';
-import {fetcMessageList, fetcSendMessage} from '../../business/slices/ai.slice';
-import {useIsFocused} from '@react-navigation/native';
+import {RootState} from '../../business/store';
+import {Enums} from '../../constants';
 
-interface CustomMessage extends IMessage {
-  _id: number;
-  text: string;
-  createdAt: Date;
-  user: {
-    _id: number;
-    name: string;
-  };
-}
-
-const ChatScreen: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+const ChatScreen = () => {
+  const route = useRoute<any>();
   const isFocused = useIsFocused();
-  const [messages, setMessages] = useState<CustomMessage[]>([]);
-  const [inputText, setInputText] = useState('');
+  const initialChatId = route?.params?.id || null;
   const {member} = useSelector((state: RootState) => state.memberSlice);
-  const {messageList, messageListLoading, sendMessage} = useSelector(
-    (state: RootState) => state.aiSlice,
-  );
+  const {token} = useSelector((state: RootState) => state.getTokenSlice);
+
+  const [chatId, setChatId] = useState<string | null>(initialChatId);
+  const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     if (isFocused) {
-      handleMessageList();
+      if (initialChatId) {
+        console.log('id var');
+        setChatId(initialChatId);
+        fetchChatHistory(initialChatId);
+      } else {
+        console.log('id yok');
+        setMessages([]);
+        createThread();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
+  }, [isFocused, initialChatId]);
 
-  useEffect(() => {
-    if (messageList) {
-      console.log(messageList);
-      const formattedMessages = convertMessages(messageList);
-      setMessages(formattedMessages);
-    }
-  }, [messageList]);
-  console.log(sendMessage);
-  useEffect(() => {
-    if (sendMessage && sendMessage.isSuccess) {
-      dispatch(fetcMessageList({memberId: member?.id}));
-    }
-  }, [dispatch, member?.id, sendMessage]);
-
-  const convertMessages = (previousMessages: any[]): CustomMessage[] => {
-    return previousMessages.map((message, index) => ({
-      _id: index + 1,
-      text: message.text,
-      createdAt: new Date(),
-      user: {
-        _id: message.role === 'user' ? 1 : 2,
-        name: message.role === 'user' ? 'User' : 'Assistant',
-      },
-    }));
-  };
-
-  const handleMessageList = () => {
+  const createThread = async () => {
     try {
-      dispatch(fetcMessageList({memberId: member?.id}));
-    } catch (error) {
-      console.log('Mesaj listesi getirilirken hata oluştu:', error);
-    }
-  };
-
-  const onSend = useCallback(
-    async (newMessages: IMessage[] = []) => {
-      try {
-        dispatch(
-          fetcSendMessage({
-            memberId: member?.id,
-            message: newMessages[0].text,
-          }),
-        );
-
-        setMessages(previousMessages =>
-          GiftedChat.append(previousMessages, newMessages),
-        );
-        setInputText(''); // Mesaj gönderildikten sonra input alanını temizle
-      } catch (error) {
-        console.log('hata:', error);
-      }
-    },
-    [dispatch, member?.id],
-  );
-  console.log(member?.id);
-
-  const handleInputTextChanged = (text: string) => {
-    setInputText(text);
-    // Enter tuşu algılandığında mesajı gönder
-    if (text.endsWith('\n')) {
-      onSend([
+      const response = await fetch(
+        `${Enums.BASE_URL}api/AssistantChatApi/CreateThread`,
         {
-          _id: Date.now(),
-          text: text.trim(),
-          createdAt: new Date(),
-          user: {_id: 1},
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            currentUserId: member.id,
+          }),
         },
-      ]);
+      );
+
+      const newChatId = await response.text();
+      console.log('CreateThread response:', newChatId);
+
+      setChatId(newChatId);
+    } catch (error: any) {
+      console.error('CreateThread error:', error.message);
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Özel Mesaj Bileşeni
-  const renderMessage = props => {
+  const fetchChatHistory = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `${Enums.BASE_URL}api/AssistantChatApi/GetChatHistory`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({chatId: id}),
+        },
+      );
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        const formattedMessages = data.map((msg, index) => ({
+          _id: index,
+          text: msg.text,
+          createdAt: new Date(),
+          user: {
+            _id: msg.role === 'user' ? 1 : 2,
+            name: msg.role === 'user' ? member?.fullName || 'Sen' : 'Asistan',
+          },
+        }));
+
+        setMessages(formattedMessages.reverse());
+      }
+    } catch (error) {
+      console.error('fetchChatHistory error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMessageToBackend = async (messageText: string) => {
+    if (!chatId) {
+      console.warn('Chat ID yok, mesaj gönderilemiyor.');
+      return;
+    }
+
+    try {
+      setIsTyping(true);
+      const response = await fetch(
+        `${Enums.BASE_URL}api/AssistantChatApi/SendMessage`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            message: messageText,
+            chatId: chatId,
+            currentUserId: member?.id,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      console.log('SendMessage response:', data);
+
+      if (data?.isSuccess && data?.chatResponse) {
+        const assistantMessage: IMessage = {
+          _id: Date.now(),
+          text: data.chatResponse,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'Asistan',
+          },
+        };
+
+        setMessages(previous =>
+          GiftedChat.append(previous, [assistantMessage]),
+        );
+      }
+    } catch (error) {
+      console.error('sendMessageToBackend error:', error);
+      Alert.alert('Hata', 'Mesaj gönderilemedi.');
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const renderBubble = (props: any) => {
+    const isRight = props.position === 'right';
+
     return (
       <Bubble
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '#0084b4',
-            marginRight: 5,
-            marginVertical: 5,
-            paddingHorizontal: 10,
+            backgroundColor: '#007AFF',
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            borderRadius: 12,
+            marginBottom: 2,
           },
           left: {
-            backgroundColor: '#c0deed',
-            marginLeft: 5,
-            marginVertical: 5,
-            paddingHorizontal: 10,
+            backgroundColor: '#E5E5EA',
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            borderRadius: 12,
+            marginBottom: 2,
           },
         }}
         renderMessageText={() => (
           <Markdown
             style={{
               body: {
-                color: props.position === 'left' ? '#0084b4' : 'white',
+                color: isRight ? '#fff' : '#000',
+                fontSize: 15,
+                lineHeight: 20,
               },
             }}>
             {props.currentMessage.text}
           </Markdown>
         )}
-        renderTime={() => null}
       />
     );
   };
 
+  const onSend = useCallback(
+    (newMessages: IMessage[] = []) => {
+      if (!newMessages.length) {
+        return;
+      }
+
+      const message = newMessages[0];
+      setMessages(previousMessages =>
+        GiftedChat.append(previousMessages, newMessages),
+      );
+
+      sendMessageToBackend(message.text);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chatId, member?.id],
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <GiftedChat
         messages={messages}
-        keyboardShouldPersistTaps="handled"
-        onSend={messages => onSend(messages)}
-        isTyping={messageListLoading}
-        user={{
-          _id: 1,
-        }}
-        placeholder="Mesaj yazın..."
-        text={inputText}
-        onInputTextChanged={handleInputTextChanged}
-        renderMessage={renderMessage}
-        textInputStyle={{color: 'black'}}
+        onSend={onSend}
+        user={{_id: 1}}
+        renderBubble={renderBubble}
+        renderAvatar={() => null}
+        renderTime={() => null}
+        alwaysShowSend
+        showUserAvatar={false}
+        isTyping={isTyping}
+        renderComposer={props => (
+          <Composer
+            {...props}
+            textInputStyle={styles.input}
+            placeholder="Mesajınızı yazın..."
+          />
+        )}
       />
     </SafeAreaView>
   );
 };
 
+export default ChatScreen;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   loadingContainer: {
     flex: 1,
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  input: {
+    backgroundColor: '#f1f1f1',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginLeft: 8,
+    marginRight: 8,
+    color: '#000',
+  },
 });
-
-export default ChatScreen;
