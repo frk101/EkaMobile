@@ -246,6 +246,8 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
         name="ChatMessage"
         component={screens.DrawerScreens.ChatScreen}
         options={() => ({
+          gestureEnabled: false, // tüm gesture'ları kapatır
+          swipeEnabled: false, // drawer swipe ile açılmasın
           headerShown: true,
           headerTitle: () => (
             <Image

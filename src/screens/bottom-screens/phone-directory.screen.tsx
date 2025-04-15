@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {
   ActivityIndicator,
   FlatList,
@@ -13,47 +12,44 @@ import {
 import React, {useEffect, useState} from 'react';
 import {HeaderUserComponent} from '../../components';
 import {Colors, Images} from '../../constants';
-import {memberList} from '../../../fakeData';
 import {AppDispatch, RootState} from '../../business/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchMembers} from '../../business/slices/members.slice';
 
+const CELL_WIDTH = 160;
+
 const PhoneDirectoryScreen: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-
   const [searchText, setSearchText] = useState('');
   const {members, membersLoading} = useSelector(
     (state: RootState) => state.membersSlice,
   );
+
   useEffect(() => {
     dispatch(fetchMembers());
   }, [dispatch]);
 
   if (membersLoading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: Colors.WHITE,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 100,
-        }}>
-        <ActivityIndicator color={Colors.blueColor} size={'large'} />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator color={Colors.blueColor} size="large" />
       </View>
     );
   }
+
+  const filteredMembers = members?.filter(item =>
+    item.nameSurname.toLowerCase().includes(searchText.toLowerCase()),
+  );
 
   const renderItem = ({item, index}: {item: any; index: number}) => (
     <View
       style={[
         styles.row,
-        {backgroundColor: index % 2 === 0 ? Colors.greyColor3 : Colors.WHITE},
+        {
+          backgroundColor: index % 2 === 0 ? Colors.greyColor3 : Colors.WHITE,
+        },
       ]}>
-      <Text
-        style={[styles.cell, {minWidth: 100}]}
-        numberOfLines={1}
-        ellipsizeMode="tail">
+      <Text style={styles.cell} numberOfLines={1} ellipsizeMode="tail">
         {item.registrationNumber}
       </Text>
       <Text style={styles.cell} numberOfLines={1} ellipsizeMode="tail">
@@ -73,83 +69,41 @@ const PhoneDirectoryScreen: React.FC = () => {
       </Text>
     </View>
   );
+
   return (
     <View style={styles.container}>
       <HeaderUserComponent />
-      <View
-        style={{
-          padding: 10,
-          backgroundColor: Colors.greyColor5,
-          marginHorizontal: 20,
-          borderRadius: 5,
-        }}>
+      <View style={styles.searchBox}>
         <View style={styles.containerInput}>
           <TextInput
             style={styles.input}
             placeholder="Search..."
             value={searchText}
-            onChangeText={text => setSearchText(text)}
-            placeholderTextColor={'#7F7F7F'}
+            onChangeText={setSearchText}
+            placeholderTextColor="#7F7F7F"
           />
-
           <TouchableOpacity style={styles.iconContainer}>
             <Image source={Images.SEACRH} style={styles.icon} />
-            {/* <Icon name="search" size={20} color="#000" /> */}
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView horizontal>
-        <View style={styles.tableContainer}>
-          {/* Tablo başlıkları */}
+        <View>
           <View style={styles.headerRow}>
-            <Text style={[styles.headerText, {color: Colors.greyColor}]}>
-              Sicil
-            </Text>
-            <Text
-              style={[
-                styles.headerText,
-                {color: Colors.greyColor, minWidth: 150},
-              ]}>
-              Ad Soyad
-            </Text>
-            <Text
-              style={[
-                styles.headerText,
-                {color: Colors.greyColor, minWidth: 150},
-              ]}>
-              Telefon
-            </Text>
-            <Text
-              style={[
-                styles.headerText,
-                {color: Colors.greyColor, minWidth: 150},
-              ]}>
-              Dahili
-            </Text>
-            <Text
-              style={[
-                styles.headerText,
-                {color: Colors.greyColor, minWidth: 150},
-              ]}>
-              Ünvan
-            </Text>
-            <Text
-              style={[
-                styles.headerText,
-                {color: Colors.greyColor, minWidth: 150},
-              ]}>
-              E-mail
-            </Text>
-          </View>
-
-          {/* Dinamik tablo verileri */}
-          <FlatList
-            data={members?.filter(item =>
-              item.nameSurname.toLowerCase().includes(searchText.toLowerCase()),
+            {['Sicil', 'Ad Soyad', 'Telefon', 'Dahili', 'Ünvan', 'E-mail'].map(
+              (header, i) => (
+                <Text key={i} style={styles.headerText}>
+                  {header}
+                </Text>
+              ),
             )}
+          </View>
+          <FlatList
+            data={filteredMembers}
             renderItem={renderItem}
-            keyExtractor={(item, index) => `memberlist-${index}`}
+            keyExtractor={(item, index) => `member-${index}`}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </ScrollView>
@@ -164,14 +118,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.WHITE,
   },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: Colors.WHITE,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 100,
+  },
+  searchBox: {
+    padding: 10,
+    backgroundColor: Colors.greyColor5,
+    marginHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
   containerInput: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
-    paddingHorizontal: 10,
     backgroundColor: '#fff',
-    // margin: 10,
+    paddingHorizontal: 10,
   },
   input: {
     flex: 1,
@@ -192,27 +159,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     paddingVertical: 10,
+    backgroundColor: Colors.greyColor4,
+  },
+  headerText: {
+    width: CELL_WIDTH,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+    color: Colors.greyColor,
   },
   row: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 4,
   },
   cell: {
-    minWidth: 150,
-    maxWidth: 200, // Hücre genişliğini kontrol etmek için
+    width: CELL_WIDTH,
     paddingHorizontal: 10,
-    overflow: 'hidden',
-    color: Colors.greyColor,
-  },
-  headerText: {
-    minWidth: 100,
-    maxWidth: 150,
-    paddingHorizontal: 10,
-    fontWeight: 'bold',
-    color: Colors.greyColor,
-  },
-  tableContainer: {
-    marginLeft: 20,
-    marginTop: 20,
+    color: '#000',
   },
 });

@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../business/store';
 import {Enums, Images} from '../../constants';
 import {formatDateThread} from '../../utils/format.date.util';
+import {useIsFocused, DrawerActions} from '@react-navigation/native';
 
 interface Thread {
   chatId: string;
@@ -21,6 +22,7 @@ interface Thread {
 }
 
 const ChatList = ({navigation}) => {
+  const isFocused = useIsFocused();
   const {member} = useSelector((state: RootState) => state.memberSlice);
   const {token} = useSelector((state: RootState) => state.getTokenSlice);
 
@@ -118,8 +120,13 @@ const ChatList = ({navigation}) => {
   const onRefresh = () => getThreadList(true);
 
   useEffect(() => {
-    getThreadList();
+    if (isFocused) {
+      getThreadList();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
+  useEffect(() => {
+    navigation.dispatch(DrawerActions.closeDrawer());
   }, []);
 
   if (loading && !refreshing) {
