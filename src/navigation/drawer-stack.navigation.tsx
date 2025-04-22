@@ -37,6 +37,7 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
           backgroundColor: Colors.WHITE,
           width: screenWidth * 0.8,
         },
+        swipeEnabled: false,
         headerShown: false,
         drawerPosition: 'right',
         drawerType: 'front',
@@ -248,8 +249,6 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
         name="ChatMessage"
         component={screens.DrawerScreens.ChatScreen}
         options={() => ({
-          gestureEnabled: false, // tüm gesture'ları kapatır
-          swipeEnabled: false, // drawer swipe ile açılmasın
           headerShown: true,
           headerTitle: () => (
             <Image
