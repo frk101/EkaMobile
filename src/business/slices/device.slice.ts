@@ -79,9 +79,12 @@ export const fetchDeviceSave =
         dispatch(fetchSuccess(response.data));
         navigationUtil.navigate('DrawerStack');
       } else {
+        console.log('burada');
         dispatch(fetchResetLogin());
         // dispatch(fetchSuccessSignIn(member));
-        toast.error(response.data.message);
+        toast.error(
+          'Bu kullanıcı ile daha önce başka bir cihaz ile giriş yapılmıştır. Lütfen yöneticiniz ile irtibata geçiniz.',
+        );
       }
     } catch (error) {
       console.log('error', error);

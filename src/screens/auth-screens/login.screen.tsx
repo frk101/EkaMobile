@@ -1,14 +1,14 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   ActivityIndicator,
   Image,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Images, Colors} from '../../constants';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import LayoutWidgets from './widgets/layout.widgets';
@@ -16,39 +16,17 @@ import {AuthStackParamList} from '../../navigation/types';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../business/store';
 import {fetchSignIn} from '../../business/slices/signIn.slice';
-import DeviceInfo from 'react-native-device-info';
 
 type AuthProps = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 const LoginScreen: React.FC<AuthProps> = ({navigation}) => {
   const [email, setEmail] = React.useState(
-    __DEV__ ? 'omer.yildiz@emlakkonutasansor.com.tr' : '',
+    __DEV__ ? 'frkalbayrak101@gmail.com' : '',
   );
-  const [password, setPassword] = React.useState(__DEV__ ? 'Eka123456' : '');
+  const [password, setPassword] = React.useState(__DEV__ ? 'Emlak123456' : '');
   const dispatch: AppDispatch = useDispatch();
   const [loading, setLoading] = React.useState(false);
-  const [deviceId, setDeviceId] = React.useState('');
 
-  const getDeviceId = async () => {
-    try {
-      const deviceIds = await DeviceInfo.getUniqueId(); // await ile Promise çözülür
-      return deviceIds;
-    } catch (error) {
-      console.error('Cihaz kimliği alınırken hata oluştu:', error);
-      return null;
-    }
-  };
-  useEffect(() => {
-    const fetchDeviceId = async () => {
-      const id = await getDeviceId();
-      if (id) {
-        setDeviceId(id);
-      } // getDeviceId fonksiyonunu çağırıyoruz
-      // ID'yi state'e kaydediyoruz
-    };
-
-    fetchDeviceId(); // Fonksiyonu çağırıyoruz
-  }, []);
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -56,10 +34,8 @@ const LoginScreen: React.FC<AuthProps> = ({navigation}) => {
         fetchSignIn({
           email,
           password,
-          deviceId: deviceId,
-          deviceType: Platform.OS,
         }),
-      ); // unwrap() ile hata fırlatma kontrolü yapabilirsiniz
+      );
     } catch (error) {
       console.error('Login failed', error);
     } finally {

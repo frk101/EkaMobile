@@ -62,4 +62,29 @@ export const fetchMembers = (): AppThunk => async (dispatch, getState) => {
   }
 };
 
+export const fetchMembersEmlk = (): AppThunk => async (dispatch, getState) => {
+  const url = 'https://bizz.emlakkonut.com.tr/api/member/searchmember';
+  const token = getState().getTokenSlice.token;
+  dispatch(fetchStart());
+
+  try {
+    const response = await axios.get(url, {
+      headers: {Authorization: `Bearer ${token}`},
+    });
+    if (response.data) {
+      dispatch(fetchSuccess(response.data.memberList));
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.error || error.message;
+      console.log(errorMessage);
+      dispatch(fetchFailure(errorMessage.toString()));
+      toast.error(errorMessage.toString());
+    } else {
+      dispatch(fetchFailure('An unknown error occurred'));
+      toast.error('An unknown error occurred');
+    }
+  }
+};
+
 export default membersSlice.reducer;

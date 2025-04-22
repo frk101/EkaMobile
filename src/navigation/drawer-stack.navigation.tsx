@@ -9,12 +9,13 @@ import BottomTabNavigator from './bottom-stack.navigation';
 import {Colors, Images} from '../constants';
 import CustomDrawerContent from '../components/custom-drawer-content';
 import screens from '../screens';
-import {Image, TouchableOpacity} from 'react-native';
+import {Dimensions, Image, TouchableOpacity} from 'react-native';
 import AnnouncementsDetailScreen from '../screens/drawer-screens/announcements-detail.screen';
 import HelpDeskSistemi from '../screens/drawer-screens/help-desk-sistemi';
 import HelpDestekChat from '../screens/drawer-screens/help-destek-chat';
 
 const Drawer = createDrawerNavigator();
+const screenWidth = Dimensions.get('window').width;
 
 const DrawerNavigator: React.FC = ({navigation}: any) => {
   const HeaderLeft = ({onPress}: any) => {
@@ -34,6 +35,7 @@ const DrawerNavigator: React.FC = ({navigation}: any) => {
       screenOptions={{
         drawerStyle: {
           backgroundColor: Colors.WHITE,
+          width: screenWidth * 0.8,
         },
         headerShown: false,
         drawerPosition: 'right',

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  drawerText: {color: Colors.blueColor4},
+  drawerText: {color: Colors.blueColor4, fontSize: 16, fontWeight: '500'},
   icon: {
     width: 25,
     height: 25,

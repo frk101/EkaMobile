@@ -42,17 +42,7 @@ export const {fetchStart, fetchSuccessSignIn, fetchFailure, fetchResetLogin} =
   memberSlice.actions;
 
 export const fetchSignIn =
-  ({
-    email,
-    password,
-    deviceId,
-    deviceType,
-  }: {
-    email: any;
-    password: any;
-    deviceId: any;
-    deviceType: any;
-  }): AppThunk =>
+  ({email, password}: {email: any; password: any}): AppThunk =>
   async (dispatch, getState) => {
     const url = `${Enums.BASE_URL}api/member/signin`;
     const token = getState().getTokenSlice.token;
@@ -68,19 +58,11 @@ export const fetchSignIn =
         },
       );
       if (response.data.isSuccess) {
-        dispatch(
-          fetchDeviceSave({
-            deviceId: deviceId,
-            deviceType: deviceType,
-            memberId: response?.data?.member?.id,
-            member: response?.data?.member,
-          }),
-        );
-        // toast.success(response.data.message);
-        // navigationUtil.navigate('AuthStack', {
-        //   screen: 'Verification',
-        //   params: {email: email, password: password},
-        // });
+        toast.success(response.data.message);
+        navigationUtil.navigate('AuthStack', {
+          screen: 'Verification',
+          params: {email: email, password: password},
+        });
       } else {
         toast.error(response.data.message);
       }
@@ -141,7 +123,9 @@ export const fetchSignInCode =
         );
       } else {
         dispatch(fetchFailure(response.data.message));
-        toast.error(response.data.message);
+        toast.error(
+          'Bu kullanıcı ile daha önce başka bir cihaz ile giriş yapılmıştır. Lütfen yöneticiniz ile irtibata geçiniz.',
+        );
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

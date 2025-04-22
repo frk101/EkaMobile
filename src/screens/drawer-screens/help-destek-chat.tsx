@@ -138,7 +138,7 @@ const HelpDestekChat = () => {
                       setSelectedUnit(String(unit.id));
                       setUnitOpen(false);
                     }}>
-                    <Text>{unit.name}</Text>
+                    <Text style={{color: '#333'}}>{unit.name}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -166,7 +166,7 @@ const HelpDestekChat = () => {
                       setSelectedStatus(String(status.id));
                       setStatusOpen(false);
                     }}>
-                    <Text>{status.name}</Text>
+                    <Text style={{color: '#333'}}>{status.name}</Text>
                   </TouchableOpacity>
                 ))}
               </View>

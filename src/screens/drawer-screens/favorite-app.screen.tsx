@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/no-unstable-nested-components */
+import React from 'react';
 import {
   Dimensions,
   FlatList,
@@ -9,13 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import {Colors, Enums, Images} from '../../constants';
+import {Colors, Images} from '../../constants';
 import PdfModal from '../../modals/pdf.modal';
 import FavoriteModal from '../../modals/favorite-app-detail.modal';
 import WebView from 'react-native-webview';
 
-const FavoriteAppScren = ({route}) => {
+const FavoriteAppScreen = ({route}) => {
   const {title, item} = route.params;
   const [openPdfModal, setOpenPdfModal] = React.useState(false);
   const [url, setUrl] = React.useState('');
@@ -23,116 +21,96 @@ const FavoriteAppScren = ({route}) => {
   const [favoriteModalOpen, setFavoriteModalOpen] = React.useState(false);
   const [favoriteTitle, setFavoriteTitle] = React.useState('');
   const [selectedData, setSelectedData] = React.useState(null);
+
   const handlePdfModal = ({url, title}) => {
     setUrl(url);
     setTitlePdf(title);
     setOpenPdfModal(true);
   };
+
   const handleFavoriteModal = ({title, data}) => {
     setSelectedData(data);
-    // setFavoriteUrl(url);
     setFavoriteTitle(title);
     setFavoriteModalOpen(true);
-    //     setUrl(url);
-    //     setTitlePdf(title);
-    // setOpenPdfModal(true);
   };
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-
     const day = date.getDate();
-    const month = date.toLocaleString('tr-TR', {month: 'long'}).slice(0, 3); // Ayın ilk 3 harfi
+    const month = date.toLocaleString('tr-TR', {month: 'long'}).slice(0, 3);
     const year = date.getFullYear();
-
     return `${day} ${month} ${year}`;
   };
+
   const content = item.contentPage.content.replace(
     /(src|href)="\/Uploads\//g,
     '$1="https://bizz.emlakkonut.com.tr/Uploads/',
   );
+  console.log(content);
+
+  const injectedCSS = `
+  const style = document.createElement('style');
+  style.innerHTML = \`
+    body, p, a {
+      font-size: 30 !important;
+      font-weight: 600 !important;
+      !important;
+    }
+    a {
+      text-decoration: none;
+    }
+  \`;
+  document.head.appendChild(style);
+  true;
+`;
+
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.container}>
       {item?.contentPage?.fileCategory ? (
         <FlatList
-          style={{marginTop: 0, marginBottom: 0}}
-          contentContainerStyle={{paddingBottom: 0}}
+          data={item.contentPage.fileCategory.file}
+          style={styles.flatList}
+          contentContainerStyle={styles.flatListContent}
           ListFooterComponent={() => (
             <WebView
               originWhitelist={['*']}
+              injectedJavaScript={injectedCSS}
               source={{html: content}}
               style={{
-                height: Dimensions.get('window').height,
+                height: Dimensions.get('window').height * 1.5,
                 backgroundColor: 'white',
-                margin: 0,
-                padding: 0,
                 marginTop: 20,
                 marginHorizontal: 20,
               }}
             />
           )}
-          data={item.contentPage.fileCategory.file}
           renderItem={({item}) => (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-                padding: 20,
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                backgroundColor: 'white',
-                marginTop: 10,
-              }}>
-              <Text style={{fontWeight: 'bold', color: Colors.BLACK}}>
-                {item.name}
-              </Text>
+            <View style={styles.card}>
+              <Text style={styles.pdfTitle}>{item.name}</Text>
               <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: Colors.blueColor3,
-                  width: 50,
-                  height: 50,
-                  borderRadius: 5,
-                }}
+                style={styles.pdfButton}
                 onPress={() =>
                   handlePdfModal({
                     url: `https://bizz.emlakkonut.com.tr/images/uploads/original/${item.filePath}`,
                     title: item.name,
                   })
                 }>
-                <Image
-                  source={Images.PDF}
-                  style={{width: 40, height: 30, resizeMode: 'contain'}}
-                />
+                <Image source={Images.PDF} style={styles.pdfIcon} />
               </TouchableOpacity>
             </View>
           )}
         />
       ) : (
         <FlatList
-          style={{marginTop: 0, marginBottom: 0}}
-          contentContainerStyle={{paddingBottom: 0}}
           data={item.contentPage.subContentPageList}
+          style={styles.flatList}
+          contentContainerStyle={styles.flatListContent}
           ListFooterComponent={() => (
             <WebView
-              javaScriptEnabled={true}
-              domStorageEnabled={true}
-              allowUniversalAccessFromFileURLs={true}
               originWhitelist={['*']}
+              injectedJavaScript={injectedCSS}
               source={{html: content}}
-              style={{
-                height: Dimensions.get('window').height,
-                backgroundColor: 'white',
-                margin: 0,
-                padding: 0,
-                marginTop: 20,
-                marginHorizontal: 20,
-              }}
+              style={styles.webView}
             />
           )}
           renderItem={({item}) => (
@@ -140,41 +118,13 @@ const FavoriteAppScren = ({route}) => {
               onPress={() =>
                 handleFavoriteModal({title: item.title, data: item})
               }
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                flex: 1,
-                marginHorizontal: 20,
-                padding: 20,
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                backgroundColor: 'white',
-                marginTop: 10,
-              }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: Colors.orangeColor,
-                  flex: 1,
-                  textAlign: 'center',
-                }}>
+              style={styles.card}>
+              <Text style={styles.dateText}>
                 {formatDate(item.modifiedDate)}
               </Text>
-              <View style={{flex: 4, marginLeft: 10}}>
-                <Text style={{fontWeight: 'bold', color: Colors.BLACK}}>
-                  {item.title}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '200',
-                    color: Colors.BLACK,
-                    marginTop: 5,
-                  }}>
-                  {item.description}
-                </Text>
+              <View style={styles.contentBlock}>
+                <Text style={styles.subTitle}>{item.title}</Text>
+                <Text style={styles.subDescription}>{item.description}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -197,6 +147,79 @@ const FavoriteAppScren = ({route}) => {
   );
 };
 
-export default FavoriteAppScren;
+export default FavoriteAppScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  flatList: {
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  flatListContent: {
+    paddingBottom: 0,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    padding: 24,
+    backgroundColor: 'white',
+    marginTop: 14,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  pdfTitle: {
+    fontWeight: 'bold',
+    color: Colors.BLACK,
+    fontSize: 18,
+    flex: 1,
+  },
+  pdfButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.blueColor3,
+    width: 60,
+    height: 60,
+    borderRadius: 6,
+  },
+  pdfIcon: {
+    width: 45,
+    height: 35,
+    resizeMode: 'contain',
+  },
+  dateText: {
+    fontWeight: 'bold',
+    color: Colors.orangeColor,
+    fontSize: 16,
+    flex: 1,
+    textAlign: 'center',
+  },
+  contentBlock: {
+    flex: 4,
+    marginLeft: 12,
+  },
+  subTitle: {
+    fontWeight: 'bold',
+    color: Colors.BLACK,
+    fontSize: 18,
+  },
+  subDescription: {
+    fontWeight: '300',
+    color: Colors.BLACK,
+    marginTop: 6,
+    fontSize: 16,
+  },
+  webView: {
+    height: Dimensions.get('window').height * 1.5,
+    backgroundColor: 'white',
+    marginTop: 20,
+    marginHorizontal: 20,
+  },
+});
