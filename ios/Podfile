@@ -16,6 +16,8 @@ end
 
 target 'NativeIntranetMobile' do
   config = use_native_modules!
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
 pod 'react-native-blob-util',
     :path => '../node_modules/react-native-blob-util'
   use_react_native!(
