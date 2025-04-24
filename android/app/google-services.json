@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991500022389",
+    "project_id": "eka-bizz",
+    "storage_bucket": "eka-bizz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991500022389:android:c21abc74b52c79dc477e3c",
+        "android_client_info": {
+          "package_name": "com.eka.bizz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmbjg8Pg-klEgbnfnYOShWum2JoGl3YhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

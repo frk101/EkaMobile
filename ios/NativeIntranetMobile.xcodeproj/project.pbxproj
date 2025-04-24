@@ -15,6 +15,7 @@
 		5F2743E4EB44B32193C5367C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5BB64DB75EE73682BFC0FB88 /* PrivacyInfo.xcprivacy */; };
 		7699B88040F8A987B510C191 /* libPods-NativeIntranetMobile-NativeIntranetMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-NativeIntranetMobile-NativeIntranetMobileTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		EB7211812DBA230400CC0D8C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB7211802DBA230400CC0D8C /* GoogleService-Info.plist */; };
 		EBAB84BF2DA7DA4200E806D6 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = EBAB84BE2DA7DA4200E806D6 /* main.jsbundle */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-NativeIntranetMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NativeIntranetMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = NativeIntranetMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-NativeIntranetMobile-NativeIntranetMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NativeIntranetMobile-NativeIntranetMobileTests.release.xcconfig"; path = "Target Support Files/Pods-NativeIntranetMobile-NativeIntranetMobileTests/Pods-NativeIntranetMobile-NativeIntranetMobileTests.release.xcconfig"; sourceTree = "<group>"; };
+		EB7211802DBA230400CC0D8C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EBAB84BE2DA7DA4200E806D6 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -91,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* NativeIntranetMobile */ = {
 			isa = PBXGroup;
 			children = (
+				EB7211802DBA230400CC0D8C /* GoogleService-Info.plist */,
 				EBAB84BE2DA7DA4200E806D6 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -251,6 +254,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				EB7211812DBA230400CC0D8C /* GoogleService-Info.plist in Resources */,
 				5F2743E4EB44B32193C5367C /* PrivacyInfo.xcprivacy in Resources */,
 				EBAB84BF2DA7DA4200E806D6 /* main.jsbundle in Resources */,
 			);
@@ -604,10 +608,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -680,10 +681,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
