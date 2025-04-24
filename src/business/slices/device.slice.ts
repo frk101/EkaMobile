@@ -49,16 +49,18 @@ export const fetchDeviceSave =
     deviceType,
     memberId,
     member,
+    fcmToken,
   }: {
     deviceId: any;
     deviceType: any;
     memberId: any;
     member: any;
+    fcmToken: any;
   }): AppThunk =>
   async (dispatch, getState) => {
     const url = `${Enums.BASE_URL}api/MemberDevice/Save`;
     const token = getState().getTokenSlice.token;
-    console.log(deviceId);
+    console.log('fcmToken', fcmToken);
     try {
       const response = await axios.post(
         url,
@@ -68,12 +70,14 @@ export const fetchDeviceSave =
             token: token,
             deviceType: deviceType,
             memberId: memberId,
+            FirebaseToken: fcmToken || '',
           },
         },
         {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
+      console.log('response', response.data);
       if (response.data.isSuccess) {
         dispatch(fetchSuccessSignIn(member));
         dispatch(fetchSuccess(response.data));

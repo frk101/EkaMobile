@@ -17,6 +17,7 @@ import {AppDispatch, RootState} from '../../business/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignInCode} from '../../business/slices/signIn.slice';
 import DeviceInfo from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
 
 type AuthProps = NativeStackScreenProps<AuthStackParamList, 'Verification'>;
 
@@ -25,11 +26,24 @@ const VerificationScreen: React.FC<AuthProps> = ({navigation, route}) => {
   const [code, setCode] = React.useState('');
   const dispatch: AppDispatch = useDispatch();
   const [deviceId, setDeviceId] = useState('');
+  const [fcmToken, setFcmToken] = useState('');
   const {memberLoading} = useSelector((state: RootState) => state.memberSlice);
   const {deviceSaveLoading} = useSelector(
     (state: RootState) => state.deviceSlice,
   );
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
+    if (enabled) {
+      const token = await messaging().getToken();
+      console.log('FCM token:', token);
+      setFcmToken(token);
+    } else {
+    }
+  };
   const getDeviceId = async () => {
     try {
       const deviceIds = await DeviceInfo.getUniqueId(); // await ile Promise çözülür
@@ -40,6 +54,7 @@ const VerificationScreen: React.FC<AuthProps> = ({navigation, route}) => {
     }
   };
   useEffect(() => {
+    requestUserPermission(); // Bildirim izni isteme fonksiyonunu çağırıyoruz
     const fetchDeviceId = async () => {
       const id = await getDeviceId();
       if (id) {
@@ -58,6 +73,7 @@ const VerificationScreen: React.FC<AuthProps> = ({navigation, route}) => {
         code: code,
         deviceId: deviceId,
         deviceType: Platform.OS,
+        fcmToken: fcmToken || '',
       }),
     );
   };

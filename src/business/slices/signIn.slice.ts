@@ -85,12 +85,14 @@ export const fetchSignInCode =
     code,
     deviceId,
     deviceType,
+    fcmToken,
   }: {
     email: any;
     password: any;
     code: any;
     deviceId: any;
     deviceType: any;
+    fcmToken: any;
   }): AppThunk =>
   async (dispatch, getState) => {
     const url = `${Enums.BASE_URL}api/member/signin`;
@@ -119,6 +121,7 @@ export const fetchSignInCode =
             deviceType: deviceType,
             memberId: response?.data?.member?.id,
             member: response?.data?.member,
+            fcmToken: fcmToken || '',
           }),
         );
       } else {
