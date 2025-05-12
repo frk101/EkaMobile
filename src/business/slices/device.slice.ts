@@ -91,7 +91,8 @@ export const fetchDeviceSave =
         );
       }
     } catch (error) {
-      console.log('error', error);
+      console.log('error1', error.response);
+      console.log('error2', error.request);
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.error || error.message;
         //   dispatch(fetchGetTokenFailure(errorMessage.toString()));
